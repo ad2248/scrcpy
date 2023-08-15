@@ -247,38 +247,44 @@ sc_display_render(struct sc_display *display, const SDL_Rect *geometry,
     SDL_Renderer *renderer = display->renderer;
     SDL_Texture *texture = display->texture;
 
-    if (rotation == 0) {
-        int ret = SDL_RenderCopy(renderer, texture, NULL, geometry);
-        if (ret) {
-            LOGE("Could not render texture: %s", SDL_GetError());
-            return SC_DISPLAY_RESULT_ERROR;
-        }
-    } else {
-        // rotation in RenderCopyEx() is clockwise, while screen->rotation is
-        // counterclockwise (to be consistent with --lock-video-orientation)
-        int cw_rotation = (4 - rotation) % 4;
-        double angle = 90 * cw_rotation;
+    // if (rotation == 0) {
+    //     int ret = SDL_RenderCopy(renderer, texture, NULL, geometry);
+    //     if (ret) {
+    //         LOGE("Could not render texture: %s", SDL_GetError());
+    //         return SC_DISPLAY_RESULT_ERROR;
+    //     }
+    // } else {
+    //     // rotation in RenderCopyEx() is clockwise, while screen->rotation is
+    //     // counterclockwise (to be consistent with --lock-video-orientation)
+    //     int cw_rotation = (4 - rotation) % 4;
+    //     double angle = 90 * cw_rotation;
 
+    //     const SDL_Rect *dstrect = NULL;
+    //     SDL_Rect rect;
+    //     if (rotation & 1) {
+    //         rect.x = geometry->x + (geometry->w - geometry->h) / 2;
+    //         rect.y = geometry->y + (geometry->h - geometry->w) / 2;
+    //         rect.w = geometry->h;
+    //         rect.h = geometry->w;
+    //         dstrect = &rect;
+    //     } else {
+    //         assert(rotation == 2);
+    //         dstrect = geometry;
+    //     }
+
+        double angle = 30;
         const SDL_Rect *dstrect = NULL;
         SDL_Rect rect;
-        if (rotation & 1) {
-            rect.x = geometry->x + (geometry->w - geometry->h) / 2;
-            rect.y = geometry->y + (geometry->h - geometry->w) / 2;
-            rect.w = geometry->h;
-            rect.h = geometry->w;
-            dstrect = &rect;
-        } else {
-            assert(rotation == 2);
             dstrect = geometry;
-        }
 
-        int ret = SDL_RenderCopyEx(renderer, texture, NULL, dstrect, angle,
-                                   NULL, 0);
+
+        int ret = SDL_RenderCopyEx(renderer, texture, NULL, dstrect, angle, 
+                            NULL, 0); 
         if (ret) {
             LOGE("Could not render texture: %s", SDL_GetError());
             return SC_DISPLAY_RESULT_ERROR;
         }
-    }
+    
 
     SDL_RenderPresent(display->renderer);
     return SC_DISPLAY_RESULT_OK;
