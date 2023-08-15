@@ -272,10 +272,9 @@ sc_display_render(struct sc_display *display, const SDL_Rect *geometry,
     //         dstrect = geometry;
     //     }
 
-        double angle = 30;
+        double angle = -30;
         const SDL_Rect *dstrect = NULL;
-        SDL_Rect rect;
-            dstrect = geometry;
+        dstrect = geometry;
 
 
         int ret = SDL_RenderCopyEx(renderer, texture, NULL, dstrect, angle, 
