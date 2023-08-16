@@ -89,9 +89,12 @@ public class ScreenEncoder implements Device.RotationListener, Device.FoldListen
                 Ln.i("#################################");
                 Ln.i("########### VideoRect ###########");
                 Rect videoRect = screenInfo.getVideoSize().toRect();
+//                format.setInteger(MediaFormat.KEY_WIDTH, videoRect.width());
+//                format.setInteger(MediaFormat.KEY_HEIGHT, videoRect.height());
                 format.setInteger(MediaFormat.KEY_WIDTH, 1800);
                 format.setInteger(MediaFormat.KEY_HEIGHT, 1920);
-
+                Ln.i("Width" + videoRect.width());
+                Ln.i("Height" + videoRect.height());
                 Ln.i("#################################");
                 Ln.i("#################################");
 
