@@ -243,7 +243,7 @@ sc_display_render(struct sc_display *display, const SDL_Rect *geometry,
             return SC_DISPLAY_RESULT_PENDING;
         }
     }
-
+    assert(rotation);
     SDL_Renderer *renderer = display->renderer;
     SDL_Texture *texture = display->texture;
 
@@ -272,7 +272,7 @@ sc_display_render(struct sc_display *display, const SDL_Rect *geometry,
     //         dstrect = geometry;
     //     }
 
-        double angle = -30;
+        double angle = -20;
         const SDL_Rect *dstrect = NULL;
         dstrect = geometry;
 

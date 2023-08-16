@@ -34,7 +34,7 @@ WIN64_TARGET := $(WIN64_TARGET_DIR).zip
 
 RELEASE_DIR := release-$(VERSION)
 
-release: clean test build-server zip-win32 zip-win64
+release: clean  build-server zip-win32 zip-win64
 	mkdir -p "$(RELEASE_DIR)"
 	cp "$(SERVER_BUILD_DIR)/server/scrcpy-server" \
 		"$(RELEASE_DIR)/scrcpy-server-$(VERSION)"

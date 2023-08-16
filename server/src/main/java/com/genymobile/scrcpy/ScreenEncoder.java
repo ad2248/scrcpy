@@ -85,9 +85,15 @@ public class ScreenEncoder implements Device.RotationListener, Device.FoldListen
                 Rect contentRect = screenInfo.getContentRect();
 
                 // include the locked video orientation
+
+                Ln.i("#################################");
+                Ln.i("########### VideoRect ###########");
                 Rect videoRect = screenInfo.getVideoSize().toRect();
-                format.setInteger(MediaFormat.KEY_WIDTH, videoRect.width());
-                format.setInteger(MediaFormat.KEY_HEIGHT, videoRect.height());
+                format.setInteger(MediaFormat.KEY_WIDTH, 1800);
+                format.setInteger(MediaFormat.KEY_HEIGHT, 1920);
+
+                Ln.i("#################################");
+                Ln.i("#################################");
 
                 Surface surface = null;
                 try {
@@ -95,7 +101,8 @@ public class ScreenEncoder implements Device.RotationListener, Device.FoldListen
                     surface = mediaCodec.createInputSurface();
 
                     // does not include the locked video orientation
-                    Rect unlockedVideoRect = screenInfo.getUnlockedVideoSize().toRect();
+//                    Rect unlockedVideoRect = screenInfo.getUnlockedVideoSize().toRect();
+                    Rect unlockedVideoRect = videoRect;
                     int videoRotation = screenInfo.getVideoRotation();
                     int layerStack = device.getLayerStack();
                     setDisplaySurface(display, surface, videoRotation, contentRect, unlockedVideoRect, layerStack);
