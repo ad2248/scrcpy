@@ -2,15 +2,26 @@ package com.genymobile.scrcpy;
 
 import com.genymobile.scrcpy.wrappers.SurfaceControl;
 
+import android.annotation.TargetApi;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ImageFormat;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.hardware.display.VirtualDisplay;
+import android.media.ImageReader;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
+import android.media.projection.MediaProjection;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.view.Surface;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -68,6 +79,7 @@ public class ScreenEncoder implements Device.RotationListener, Device.FoldListen
         return resetCapture.getAndSet(false);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void streamScreen() throws IOException, ConfigurationException {
         Codec codec = streamer.getCodec();
         MediaCodec mediaCodec = createMediaCodec(codec, encoderName);
@@ -82,21 +94,22 @@ public class ScreenEncoder implements Device.RotationListener, Device.FoldListen
         try {
             do {
                 ScreenInfo screenInfo = device.getScreenInfo();
-                Rect contentRect = screenInfo.getContentRect();
+//                Rect deviceRect = screenInfo.getContentRect();
+
+                Rect deviceRect = new Rect(0, 0, 1970, 1800);
+                Ln.i("deviceRect:");
+                Ln.i("Width: " + deviceRect.width());
+                Ln.i("Height: " + deviceRect.height());
+                Ln.i("Left: " + deviceRect.left);
+                Ln.i("Right: " + deviceRect.right);
+                Ln.i("Top: " + deviceRect.top);
+                Ln.i("Button: " + deviceRect.bottom);
 
                 // include the locked video orientation
-
-                Ln.i("#################################");
-                Ln.i("########### VideoRect ###########");
-                Rect videoRect = screenInfo.getVideoSize().toRect();
-//                format.setInteger(MediaFormat.KEY_WIDTH, videoRect.width());
-//                format.setInteger(MediaFormat.KEY_HEIGHT, videoRect.height());
-                format.setInteger(MediaFormat.KEY_WIDTH, 1800);
-                format.setInteger(MediaFormat.KEY_HEIGHT, 1920);
-                Ln.i("Width" + videoRect.width());
-                Ln.i("Height" + videoRect.height());
-                Ln.i("#################################");
-                Ln.i("#################################");
+//                Rect videoRect = screenInfo.getVideoSize().toRect();
+                Rect videoRect = new Rect(0, 0, 1970, 1800); //int left, int top, int right, int bottom
+                format.setInteger(MediaFormat.KEY_WIDTH, videoRect.width());
+                format.setInteger(MediaFormat.KEY_HEIGHT, videoRect.height());
 
                 Surface surface = null;
                 try {
@@ -104,11 +117,13 @@ public class ScreenEncoder implements Device.RotationListener, Device.FoldListen
                     surface = mediaCodec.createInputSurface();
 
                     // does not include the locked video orientation
-//                    Rect unlockedVideoRect = screenInfo.getUnlockedVideoSize().toRect();
-                    Rect unlockedVideoRect = videoRect;
+//                    Rect displayRect = screenInfo.getUnlockedVideoSize().toRect();
+                    Rect displayRect = new Rect(0, 0, 1920, 1800); //int left, int top, int right, int bottom
+
                     int videoRotation = screenInfo.getVideoRotation();
                     int layerStack = device.getLayerStack();
-                    setDisplaySurface(display, surface, videoRotation, contentRect, unlockedVideoRect, layerStack);
+                    setDisplaySurface(display, surface, videoRotation, deviceRect, displayRect, layerStack);
+
 
                     mediaCodec.start();
 

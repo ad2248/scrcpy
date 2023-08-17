@@ -272,7 +272,7 @@ sc_display_render(struct sc_display *display, const SDL_Rect *geometry,
     //         dstrect = geometry;
     //     }
 
-        double angle = -20;
+        double angle = 20;
         const SDL_Rect *dstrect = NULL;
         dstrect = geometry;
 
